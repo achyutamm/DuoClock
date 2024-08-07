@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuoClock</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .header {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #333;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .clock-container {
+            display: flex;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .clock {
+            padding: 20px;
+            flex: 1;
+            text-align: center;
+        }
+        .time {
+            font-size: 5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .timezone, .date {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: #555;
+        }
+        .vertical-line {
+            width: 1px;
+            background-color: #ccc;
+            margin: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">DuoClock: Real-Time IST and EST</div>
+    <div class="clock-container">
+        <div class="clock">
+            <div class="timezone">India Standard Time now</div>
+            <div id="ist-time" class="time">--:--:--</div>
+            <div id="ist-date" class="date">Loading date...</div>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="clock">
+            <div class="timezone">Time in New York now</div>
+            <div id="est-time" class="time">--:--:--</div>
+            <div id="est-date" class="date">Loading date...</div>
+        </div>
+    </div>
+    <script>
+        function updateTime() {
+            fetch('/time')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ist-time').innerText = data.ist_time;
+                    document.getElementById('ist-date').innerText = data.ist_date;
+                    document.getElementById('est-time').innerText = data.est_time;
+                    document.getElementById('est-date').innerText = data.est_date;
+                });
+        }
+
+        setInterval(updateTime, 1000);
+        window.onload = updateTime;
+    </script>
+</body>
+</html>
